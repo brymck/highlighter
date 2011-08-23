@@ -1,16 +1,32 @@
 Attribute VB_Name = "Highlight"
-'Bryan McKelvey
-'***************************************************************************************************
 Option Explicit
 
 Private Const FIRST_SHEET As Integer = 1
 Private OnColor As Integer
 Private OffColor As Integer
+Private Const MIN_COLOR_INDEX As Integer = 1
+Private Const MAX_COLOR_INDEX As Integer = 32
 Enum ToggleMode
     Toggle = 0
     ForceOn = 1
     ForceOff = 2
 End Enum
+
+Private Function IsValidColor(ByVal Color As Variant)
+    On Error GoTo ErrHandler
+    Color = CInt(Color)
+    If Color >= MIN_COLOR_INDEX And Color <= MAX_COLOR_INDEX Then
+        IsValidColor = True
+    Else
+        IsValidColor = False
+    End If
+
+ExitProcesses:
+    Exit Function
+    
+ErrHandler:
+    IsValidColor = False
+End Function
 
 ' Sets colors to contents of OnColor and OffColor (A1 and B1, respectively, on Sheet 1),
 ' which by default are set to 23 and 1
@@ -122,20 +138,29 @@ Public Sub SetEditableColor()
     Dim wb As Workbook
     Dim r As Range
     Dim CurrentIndex As Integer
+    Dim DefaultIndex As Integer
     Dim Response As Variant
     
     Set wb = ThisWorkbook
     Set r = ActiveCell
     CurrentIndex = r.Font.ColorIndex
     
+    ' Use current index only if it's valid
+    If IsValidColor(CurrentIndex) Then
+        DefaultIndex = CurrentIndex
+    Else
+        DefaultIndex = OnColor
+    End If
+    
     ' Allow user to manually set color index, defaulting to current cell's color index
-    Response = InputBox("Current cell's color index is " & CurrentIndex & ". Enter a color index " _
-        & "to use globally for highlighting." & vbCrLf & vbCrLf & _
-        "(Range: 1-32, Recommended: 23, Current: " & OnColor & ")", _
-        "Set Editable Color", CurrentIndex)
+    Response = InputBox(printf("Current cell's color index is %s. Enter a color index " _
+                   & "to use globally for highlighting." & vbCrLf & vbCrLf & _
+                   "(Range: %s-%s, Recommended: 23, Current: %s)", _
+                   CurrentIndex, MIN_COLOR_INDEX, MAX_COLOR_INDEX, OnColor), _
+               "Set Editable Color", DefaultIndex)
     
     ' Set OnColor if user's response is valid
-    If Response >= 1 And Response <= 32 Then
+    If IsValidColor(Response) Then
         wb.Sheets(FIRST_SHEET).Range("OnColor").Value = CInt(Response)
     End If
     

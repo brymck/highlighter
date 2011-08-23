@@ -1,6 +1,4 @@
 Attribute VB_Name = "Toolbar"
-'Bryan McKelvey
-'***************************************************************************************************
 Option Explicit
 
 'Name of package and toolbar
