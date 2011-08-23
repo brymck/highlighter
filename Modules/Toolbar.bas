@@ -25,7 +25,8 @@ Public Sub CreateToolbar()
         Array("Unhighlight", "HideEditable", 0, False), _
         Array("Mark editable", "MarkEditable", 0, False), _
         Array("Mark uneditable", "MarkUneditable", 0, False), _
-        Array("Set Color", "SetEditableColor", 0, False))
+        Array("Set color", "SetEditableColor", 0, False), _
+        Array("Prepare sheet", "PrepareSheet", 0, False))
 
     'Delete pre-existing any toolbar with the same name
     On Error Resume Next

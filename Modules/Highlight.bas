@@ -169,6 +169,17 @@ Public Sub SetEditableColor()
     Set r = Nothing
 End Sub
 
+Public Sub PrepareSheet()
+    Dim ws As Worksheet
+    Set ws = ActiveSheet
+    
+    ' Set the color index for all cells to automatic
+    ws.Cells.Font.ColorIndex = 0
+    
+    ' Clear object variable memory
+    Set ws = Nothing
+End Sub
+
 ' Force editability
 Public Sub MarkEditable()
     ToggleEditability ToggleMode.ForceOn
